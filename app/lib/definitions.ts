@@ -2,6 +2,7 @@
 // It describes the shape of the data, and what data type each property should accept.
 // For simplicity of teaching, we're manually defining these types.
 // However, these types are generated automatically if you're using an ORM such as Prisma.
+import { z } from 'zod';
 export type User = {
   id: string;
   name: string;
@@ -86,3 +87,12 @@ export type InvoiceForm = {
   amount: number;
   status: 'pending' | 'paid';
 };
+
+
+export const FormSchema = z.object({
+  id: z.string().optional(), // For updates only, not required on creation
+  customerId: z.string(),
+  amount: z.coerce.number().min(1, 'Amount must be at least 1'),
+  status: z.enum(['pending', 'paid']),
+  date: z.string().optional(), // Auto-generated during create
+});
